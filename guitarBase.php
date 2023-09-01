@@ -29,22 +29,18 @@ class guitarBase
 
     }
 
-    public function search(Builder $builder, MODEL $model, Type $type, Wood $frontWood, Wood $backWood): void
+    public function search(GuitarSpec $searchSpec): array
     {
+        $matchingGuitars = array();
 
         foreach ($this->guitars as $guitar) {
-            if (($guitar->getSpec()->getType() === $type->value || $type->value === "ANY") &&
-                ($guitar->getSpec()->getBuilder() === $builder->value || $builder->value === "ANY") &&
-                ($guitar->getSpec()->getModel() === $model->value || $model->value === "ANY") &&
-                ($guitar->getSpec()->getFrontWood() === $frontWood->value || $frontWood->value === "ANY") &&
-                ($guitar->getSpec()->getBackWood() === $backWood->value || $backWood->value === "ANY")
+           $spec = $guitar->getSpec();
 
-            ) {
-                $this->searchedGuitars[] = $guitar;
-
+            if($spec->matches($searchSpec)) {
+                $matchingGuitars[] = $guitar;
             }
-
         }
+        return $matchingGuitars;
     }
 
     public function seachResult(): array|bool
